@@ -1,5 +1,8 @@
 package com.eiko.gui.main;
 
+import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.gui.tab.TabHolder;
+
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -12,6 +15,9 @@ public class MainFrame extends Application {
 		stage.setTitle("Tutoring Appointment Manager");
 		Group group = new Group();
 		Scene scene = new Scene(group);
+		TabHolder tabs = new TabHolder(new TutorDBConnector());
+		
+		group.getChildren().add(tabs);
 		
 		stage.setScene(scene);
 		stage.show();

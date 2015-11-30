@@ -1,4 +1,6 @@
-package com.eiko.gui.main;
+package com.eiko.gui.tab;
+
+import com.eiko.back.connect.TutorDBConnector;
 
 import javafx.scene.control.TabPane;
 
@@ -8,10 +10,10 @@ public class TabHolder extends TabPane {
 	private TabUsage tab2;
 	
 	
-	public TabHolder() {
+	public TabHolder(TutorDBConnector c) {
 		this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		tab1 = new TabSearch();
-		tab2 = new TabUsage();
+		tab1 = new TabSearch(c);
+		tab2 = new TabUsage(c);
 		this.getTabs().add(tab1);
 		this.getTabs().add(tab2);
 	}

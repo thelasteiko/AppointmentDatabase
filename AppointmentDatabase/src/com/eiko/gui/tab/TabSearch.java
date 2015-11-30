@@ -1,4 +1,8 @@
-package com.eiko.gui.main;
+package com.eiko.gui.tab;
+
+import java.sql.ResultSet;
+
+import com.eiko.back.connect.TutorDBConnector;
 
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -23,7 +27,7 @@ public class TabSearch extends Tab {
 	private ToggleGroup rb_group;
 	private TableView table;
 
-	public TabSearch() {
+	public TabSearch(TutorDBConnector c) {
 		this.setText("Search");
 		
 		
@@ -47,6 +51,19 @@ public class TabSearch extends Tab {
 			//TODO pressing the button gets the selected
 			//radio button then requests that table set
 			//using the given parameters
+			RadioButton rb = (RadioButton) rb_group.getSelectedToggle();
+			switch (rb.getText()) {
+			case "Student":
+				
+				break;
+			case "Class":
+				break;
+			case "Appointment":
+				break;
+			default:
+				System.out.println(rb.getText());
+			}
+			
 		});
 		
 		rb_group = new ToggleGroup();
@@ -62,5 +79,9 @@ public class TabSearch extends Tab {
 		pane_search.getChildren().add(lbl_search);
 		pane_search.getChildren().add(field_search);
 		pane_search.getChildren().add(btn_search);
+	}
+	
+	private void parseResult(ResultSet r) {
+		
 	}
 }
