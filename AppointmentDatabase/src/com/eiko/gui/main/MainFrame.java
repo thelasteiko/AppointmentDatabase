@@ -8,6 +8,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * This is the main GUI component and where the program starts.
+ * @author Melinda Robertson
+ * @version 20151201
+ */
 public class MainFrame extends Application {
 
 	@Override
@@ -25,6 +30,13 @@ public class MainFrame extends Application {
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+	
+	public static boolean isNumeric(String s) {
+		for(char c: s.toCharArray()) {
+			if (!Character.isDefined(c)) return false;
+		}
+		return true;
 	}
 
 }

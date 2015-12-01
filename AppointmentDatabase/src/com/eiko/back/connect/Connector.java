@@ -2,25 +2,39 @@ package com.eiko.back.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
+
+import com.eiko.gui.main.ErrorHandle;
+
 /**
- * HINTS:
- * 	1.	use java.sql.Date to set or add Date attributes
- * 		java.sql.Date(new java.util.Date());	<--makes today's date
+ * Handles interactions with a database. Instead of using prepared statements
+ * it passes all arguments as a Strings to the database.
  * @author Melinda Robertson
- *
+ * @version 20151201
  */
-public abstract class Connector {
+public class Connector {
 	
 	protected Connection c;
-	private HashMap<String,PreparedStatement> store;
+	/**
+	 * Holds stored queries as Strings with labels.
+	 * Stored queries are in the same format as PreparedStatements
+	 * but have more versatility because they insert parameters verbatim.
+	 */
+	protected HashMap<String,String> store;
 	
+	/**
+	 * Creates a new Connector object that gives access to the indicated
+	 * database.
+	 * @param driver is the driver to use, usually com.mysql.jdbc.Driver
+	 * @param host is the host and database name.
+	 * @param username is the current user.
+	 * @param password is the password corresponding to the user.
+	 */
 	public Connector(String driver, String host, String username, String password) {
-		this.store = new HashMap<String,PreparedStatement>();
+		this.store = new HashMap<String,String>();
 		try {
 			Class.forName(driver);
 			c = DriverManager.getConnection(host,username,password);
@@ -31,64 +45,121 @@ public abstract class Connector {
 		}
 	}
 	
-	public void add(String name, String st) {
-		PreparedStatement ps;
-		try {
-			ps = c.prepareStatement(st);
-			store.put(name, ps);
-		} catch (SQLException e) {
-			System.out.println("Could not add statment: " + e.getSQLState());
-		}
+	/**
+	 * Adds a pre-built query to a stored list.
+	 * @param name is the name of the query.
+	 * @param stmt is the statement to store.
+	 */
+	public void add(String name, String stmt) {
+		store.put(name, stmt);
 	}
 	
+	/**
+	 * Removes one of the queries from the list.
+	 * @param name is the name of the query.
+	 */
 	public void remove(String name) {
 		store.remove(name);
 	}
 	
 	/**
-	 * Given parameters must match that query's number of
-	 * parameters.
-	 * 
-	 * EX: "SELECT * FROM student WHERE student_id = ?"
-	 * 		param.length is then 1
-	 * @param name
-	 * @param param
+	 * Inserts parameters into the indicated query wherever there is
+	 * a '?' character.
+	 * @param query is the name of the query.
+	 * @param param are the parameters to give the query.
+	 * @return a String representing a complete executable query.
+	 */
+	private String resolve(String query, String... param) {
+		String q1 = store.get(query);
+		String q = "";
+		int qindex = q1.indexOf('?');
+		int last = -1;
+		int i = 0;
+		while (qindex >= 0 && i < param.length) {
+			q += q1.substring(last+1, qindex);
+			q += param[i++];
+			last = qindex;
+			qindex = q1.indexOf('?',last+1);
+		}
+		return q;
+	}
+	
+	/**
+	 * Executes the requested SELECT query. Any other type of query
+	 * will throw an error.
+	 * @param query is the name of the query to execute.
+	 * @param param are the parameters.
+	 * @return the result of the query.
+	 */
+	public ResultSet query(String query, String... param) {
+		try {
+			String q1 = resolve(query, param);
+			if(!q1.toLowerCase().contains("select")) throw new IllegalArgumentException();
+			Statement s = c.createStatement();
+			return s.executeQuery(q1);
+		} catch (SQLException e) {
+			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+			return null;
+		} catch (IllegalArgumentException e1) {
+			new ErrorHandle("Illegal Argument for query: " + query);
+			return null;
+		}
+	}
+	
+	/**
+	 * Executes a SELECT query.
+	 * @param query is the query to execute.
 	 * @return
 	 */
-	public ResultSet select(String name, String[] param) {
+	public ResultSet query(String query) {
 		try {
-			PreparedStatement ps = store.get(name);
-			for(int i = 0; i < param.length; i++) {
-				ps.setString(i+1, param[i]);
-			}
-			return ps.executeQuery();
-		} catch (SQLException e) {
-			System.out.println("Could not execute select query: " + e.getSQLState());
-			return null;
-		}
-	}
-	
-	public void update(String name, String[] param) {
-		try {
-			PreparedStatement ps = store.get(name);
-			for(int i = 0; i < param.length; i++) {
-				ps.setString(i+1, param[i]);
-			}
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Could not execute update: " + e.getSQLState());
-		}
-	}
-	
-	public ResultSet query(String stmt) {
-		try {
+			if(!query.toLowerCase().contains("select")) throw new IllegalArgumentException();
 			Statement s = c.createStatement();
-			return s.executeQuery(stmt);
+			return s.executeQuery(query);
 		} catch (SQLException e) {
-			System.out.println("Could not execute general query: " + e.getSQLState());
+			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+			return null;
+		} catch (IllegalArgumentException e1) {
+			new ErrorHandle("Illegal Argument for query: " + query);
 			return null;
 		}
 	}
-	public abstract void runQueryOn(String query, String table, String[] param);
-
+	
+	/**
+	 * Executes a record change in the database. Must be one of
+	 * UPDATE, INSERT or DELETE. Any other type of query will throw
+	 * an error.
+	 * @param query is the name of the query to execute.
+	 * @param param are the parameters.
+	 */
+	public void update(String query, String... param) {
+		try {
+			String q = resolve(query, param);
+			if (q.toLowerCase().contains("update") ||
+					q.toLowerCase().contains("delete") ||
+					q.toLowerCase().contains("insert"))
+				throw new IllegalArgumentException();
+			Statement s = c.createStatement();
+			s.executeUpdate(q);
+		} catch (SQLException e) {
+			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+		} catch (IllegalArgumentException e1) {
+			new ErrorHandle("Illegal Argument for query: " + query);
+		}
+	}
+	
+	public void update(String query) {
+		try {
+			if (query.toLowerCase().contains("update") ||
+					query.toLowerCase().contains("delete") ||
+					query.toLowerCase().contains("insert"))
+				throw new IllegalArgumentException();
+			Statement s = c.createStatement();
+			s.executeUpdate(query);
+		} catch (SQLException e) {
+			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+		} catch (IllegalArgumentException e1) {
+			new ErrorHandle("Illegal Argument for query: " + query);
+		}
+	}
 }
