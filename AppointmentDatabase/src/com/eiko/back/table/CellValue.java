@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 public class CellValue {
 	
 	/**
-	 * The hasmap stores the attributes of the cell value.
+	 * The hashmap stores the attributes of the cell value.
 	 */
 	private HashMap<String, SimpleStringProperty> attr;
 	
@@ -23,6 +23,14 @@ public class CellValue {
 	
 	public void set(String key, String value) {
 		attr.put(key, new SimpleStringProperty(value));
+	}
+	
+	public <T extends Number> void set(String key, T value) {
+		attr.put(key, new SimpleStringProperty(String.valueOf(value)));
+	}
+	
+	public void set(String key, java.sql.Date value) {
+		attr.put(key, new SimpleStringProperty(value.toString()));
 	}
 	
 	public String getStudentID() {return attr.get("StudentID").get();}

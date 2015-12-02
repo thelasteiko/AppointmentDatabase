@@ -4,30 +4,54 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.back.table.CellValue;
+import com.eiko.back.table.TableMaker;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 public class Tester extends Application {
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-
+	public void start(Stage stage) throws Exception {
+		Group group = new Group();
+		Scene scene = new Scene(group);
+		ObservableList<CellValue> data = FXCollections.observableArrayList();
+		String[] student_keys = {"StudentID", "FirstName", "LastName", "StudentStatus"};
+		String sql = "SELECT * FROM student WHERE "
+				+ "LCASE(student.LastName) LIKE LCASE(CONCAT('%','?','%')) "
+				+ "OR LCASE(student.FirstName) LIKE LCASE(CONCAT('%','?','%'))";
+		for(int i = 0; i < 10; i++) {
+			CellValue cv = new CellValue();
+			for (int j = 0; j < student_keys.length; j++) {
+				cv.set(student_keys[j], student_keys[j] + " " + i);
+			}
+			data.add(cv);
+		}
+		
+		TableView table = TableMaker.buildTable(student_keys, data);
+		table.setMinSize(250, 500);
+		group.getChildren().add(table);
+		stage.setScene(scene);
+		stage.show();
 	}
 
 	public static void main(String[] args) {
+		launch(args);
+	}
+	
+	public static void test2() {
 		String sql = "SELECT * FROM class_name WHERE "
 				+ "LCASE(ClassName) LIKE LCASE(CONCAT('%','?','%'))";
 		String sql2 = "SELECT * FROM class_name WHERE "
 				+ "ClassNumber = ?";
 		System.out.println(resolve(sql, "melinda"));
 		System.out.println(resolve(sql2, "447"));
-		System.exit(0);
 	}
 	
 	/**
