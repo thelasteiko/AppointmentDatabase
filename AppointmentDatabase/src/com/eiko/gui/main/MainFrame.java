@@ -23,7 +23,6 @@ public class MainFrame extends Application {
 		TabHolder tabs = new TabHolder(new TutorDBConnector());
 		
 		group.getChildren().add(tabs);
-		
 		stage.setScene(scene);
 		stage.show();
 	}

@@ -16,6 +16,10 @@ import javax.swing.JPanel;
  *
  */
 public class ErrorHandle extends JFrame {
+	
+//	public static void main(String[] args) {
+//		new ErrorHandle("TEST");
+//	}
 
 	/**
 	 * 
@@ -26,10 +30,11 @@ public class ErrorHandle extends JFrame {
 	 * @throws HeadlessException
 	 */
 	public ErrorHandle(String error) throws HeadlessException {
+		this.setSize(250, 100);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Error");
 		
-		JLabel label = new JLabel("Eroor: " + error);
+		JLabel label = new JLabel("Error: " + error);
 		JButton exit = new JButton("Exit Program");
 		exit.addActionListener((event)->{
 			System.exit(0);
@@ -49,6 +54,7 @@ public class ErrorHandle extends JFrame {
 		btn.add(close);
 		
 		main.add(btn, BorderLayout.SOUTH);
+		this.add(main);
 		this.setVisible(true);
 	}
 

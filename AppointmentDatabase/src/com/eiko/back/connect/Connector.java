@@ -65,6 +65,7 @@ public class Connector {
 	/**
 	 * Inserts parameters into the indicated query wherever there is
 	 * a '?' character.
+	 * TODO need to change how the last part is added
 	 * @param query is the name of the query.
 	 * @param param are the parameters to give the query.
 	 * @return a String representing a complete executable query.
@@ -81,6 +82,7 @@ public class Connector {
 			last = qindex;
 			qindex = q1.indexOf('?',last+1);
 		}
+		if (last < q1.length() - 1) q += q1.substring(last);
 		return q;
 	}
 	
@@ -92,16 +94,17 @@ public class Connector {
 	 * @return the result of the query.
 	 */
 	public ResultSet query(String query, String... param) {
+		String q1 = resolve(query, param);
 		try {
-			String q1 = resolve(query, param);
 			if(!q1.toLowerCase().contains("select")) throw new IllegalArgumentException();
 			Statement s = c.createStatement();
 			return s.executeQuery(q1);
 		} catch (SQLException e) {
-			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+			new ErrorHandle("SQL error with running query: \n" + e.getSQLState()
+					+ ": " + q1);
 			return null;
 		} catch (IllegalArgumentException e1) {
-			new ErrorHandle("Illegal Argument for query: " + query);
+			new ErrorHandle("Illegal Argument for query: \n" + query);
 			return null;
 		}
 	}

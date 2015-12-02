@@ -21,6 +21,7 @@ public class TabHolder extends TabPane {
 	 */
 	public TabHolder(TutorDBConnector c) {
 		this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
+		this.setMinSize(500, 500);
 		tab1 = new TabSearch(c);
 		tab2 = new TabUsage(c);
 		this.getTabs().add(tab1);

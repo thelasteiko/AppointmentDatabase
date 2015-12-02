@@ -1,5 +1,7 @@
 package com.eiko.back.table;
 
+import java.util.NoSuchElementException;
+
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 
@@ -20,7 +22,8 @@ public class ModifiableScrollTable extends ScrollPane {
 		this.table = content;
 	}
 	
-	public CellValue getItem() {
+	public CellValue getItem() throws NoSuchElementException {
+		if (table == null) throw new NoSuchElementException();
 		return table.getSelectionModel().getSelectedItem();
 	}
 	
