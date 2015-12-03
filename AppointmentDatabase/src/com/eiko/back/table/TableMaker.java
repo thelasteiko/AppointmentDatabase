@@ -2,7 +2,6 @@ package com.eiko.back.table;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -39,13 +38,13 @@ public class TableMaker {
 	public static ObservableList<CellValue> buildList(String[] keys, ResultSet r) throws SQLException {
 		ObservableList<CellValue> array = FXCollections.observableArrayList();
 		if (r == null) {
-			System.out.println("No result.");
+			//System.out.println("No result.");
+			throw new SQLException("Result is null.");
 		}
 		while(r.next()) {
-			System.out.println(r.getString(1));
+			//System.out.println(r.getString(1));
 			CellValue cv = new CellValue();
 			for(int i = 0; i < keys.length; i++) {
-				//TODO idk what is going on...
 				cv.set(keys[i], r.getString(i+1));
 			}
 			array.add(cv);

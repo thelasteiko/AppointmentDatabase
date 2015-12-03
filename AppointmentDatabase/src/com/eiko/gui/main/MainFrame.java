@@ -20,6 +20,7 @@ public class MainFrame extends Application {
 		stage.setTitle("Tutoring Appointment Manager");
 		Group group = new Group();
 		Scene scene = new Scene(group);
+		//This should hold the bulk of the program.
 		TabHolder tabs = new TabHolder(new TutorDBConnector());
 		
 		group.getChildren().add(tabs);

@@ -2,6 +2,7 @@ package com.eiko.back.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -76,13 +77,18 @@ public class Connector {
 		int qindex = q1.indexOf('?');
 		int last = -1;
 		int i = 0;
-		while (qindex >= 0 && i < param.length) {
-			q += q1.substring(last+1, qindex);
+		while (qindex >= 0) {
+			q += q1.substring(last + 1, qindex);
 			q += param[i++];
 			last = qindex;
-			qindex = q1.indexOf('?',last+1);
+			qindex = q1.indexOf('?', last + 1);
+			if (i == param.length)
+				i = 0;
 		}
-		if (last < q1.length() - 1) q += q1.substring(last);
+		if (last < q1.length() - 1)
+			q += q1.substring(last + 1);
+		// System.out.println("qindex: " + qindex + "\tlast: " + last +
+		// "\tlength: " + q1.length());
 		return q;
 	}
 	
@@ -149,6 +155,19 @@ public class Connector {
 		} catch (IllegalArgumentException e1) {
 			new ErrorHandle("Illegal Argument for query: " + query);
 		}
+	}
+	
+	public ResultSet queryAsStmt(String query, String param) {
+		try {
+			PreparedStatement s = c.prepareStatement(query);
+			s.setString(1, param);
+			return s.executeQuery();
+		} catch (SQLException e) {
+			new ErrorHandle("SQL error with running query: " + e.getSQLState());
+		} catch (IllegalArgumentException e1) {
+			new ErrorHandle("Illegal Argument for query: " + query);
+		}
+		return null;
 	}
 	
 	public void update(String query) {

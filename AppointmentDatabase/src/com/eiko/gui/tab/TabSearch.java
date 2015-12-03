@@ -59,11 +59,11 @@ public class TabSearch extends Tab {
 	private void initQueries() {
 		c.add("select_student_byid", "SELECT * FROM student WHERE StudentID = ?");
 		c.add("select_student_byname", "SELECT * FROM student WHERE "
-				+ "LCASE(student.LastName) LIKE LCASE(CONCAT('%','?','%')) "
-				+ "OR LCASE(student.FirstName) LIKE LCASE(CONCAT('%','?','%'))");
+				+ "LCASE(student.LastName) LIKE LCASE(\"%?%\") "
+				+ "OR LCASE(student.FirstName) LIKE LCASE(\"%?%\")");
 		
 		c.add("select_class_byname", "SELECT * FROM class_name WHERE "
-				+ "LCASE(ClassName) LIKE LCASE(CONCAT('%','?','%'))");
+				+ "LCASE(ClassName) LIKE LCASE(\"%?%\")");
 		c.add("select_class_byid", "SELECT * FROM class_name WHERE "
 				+ "ClassNumber = ?");
 		
@@ -121,8 +121,9 @@ public class TabSearch extends Tab {
 				new StudentPanel(cv);
 			}
 		});
+		GridPane.setConstraints(open, 4, 4, 1, 1);
 		pane_search.getChildren().addAll(
-				field_search, btn_search, rb_student, rb_class, rb_appt, sc_pane);
+				field_search, btn_search, rb_student, rb_class, rb_appt, open, sc_pane);
 		stack.getChildren().add(pane_search);
 	}
 	
