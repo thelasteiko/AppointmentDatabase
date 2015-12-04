@@ -14,7 +14,7 @@ import com.eiko.gui.main.ErrorHandle;
  * Handles interactions with a database. Instead of using prepared statements
  * it passes all arguments as a Strings to the database.
  * @author Melinda Robertson
- * @version 20151201
+ * @version 20151203
  */
 public class Connector {
 	
@@ -123,6 +123,7 @@ public class Connector {
 	public ResultSet query(String query) {
 		try {
 			if(!query.toLowerCase().contains("select")) throw new IllegalArgumentException();
+			//System.out.println(query);
 			Statement s = c.createStatement();
 			return s.executeQuery(query);
 		} catch (SQLException e) {

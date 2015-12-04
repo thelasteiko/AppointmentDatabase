@@ -16,20 +16,24 @@ public class ModifiableScrollTable extends ScrollPane {
 	
 	private TableView<CellValue> table;
 
-	public ModifiableScrollTable(){table = null;};
+	public ModifiableScrollTable(){
+		table = null;
+	};
 	public ModifiableScrollTable(TableView<CellValue> content) {
 		super(content);
 		this.table = content;
 	}
 	
 	public CellValue getItem() throws NoSuchElementException {
-		if (table == null) throw new NoSuchElementException();
+		if (table == null || table.getSelectionModel().getSelectedIndex() < 0)
+			throw new NoSuchElementException();
 		return table.getSelectionModel().getSelectedItem();
 	}
 	
 	public void setTable(TableView<CellValue> content) {
 		this.table = content;
 		this.setContent(content);
+		//System.out.println("h: " + this.getHeight() + "\tw: " + this.getWidth());
 	}
 
 }

@@ -2,6 +2,7 @@ package com.eiko.gui.tab;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 import com.eiko.back.connect.TutorDBConnector;
 import com.eiko.back.table.CellValue;
@@ -17,12 +18,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
 /**
  * Runs general database queries on three tables. Opens panels with more detailed information on request.
  * @author Melinda Robertson
- * @version 20151201
+ * @version 20151203
  */
 public class TabSearch extends Tab {
 	
@@ -115,10 +117,15 @@ public class TabSearch extends Tab {
 		open.setOnAction((event)->{
 			//TODO create a new tab of the appropriate type
 			//and add it to the stack
+			try {
 			CellValue cv = sc_pane.getItem();
 			switch(currentsearch) {
 			case "Student":
-				new StudentPanel(cv);
+				push(new StudentPanel(cv));
+				break;
+			}
+			} catch (NoSuchElementException e) {
+				//if item isn't selected or the table isn't available
 			}
 		});
 		GridPane.setConstraints(open, 4, 4, 1, 1);
@@ -164,13 +171,20 @@ public class TabSearch extends Tab {
 	}
 	
 	public void push(GridPane gp) {
-		this.stack.getChildren().add(0, gp);
+		this.stack.getChildren().add(0,gp);
+		stack.getChildren().get(1).setVisible(false);
 	}
 	
 	public void pop() {
 		this.stack.getChildren().remove(0);
+		stack.getChildren().get(0).setVisible(true);
 	}
 	
+	/**
+	 * Inner class for to display student information.
+	 * @author Melinda Robertson
+	 *
+	 */
 	private class StudentPanel extends GridPane {
 		
 		final private String[] st_class_keys = {"ClassNumber",  "Section", "ClassName"};
@@ -179,33 +193,36 @@ public class TabSearch extends Tab {
 		private ModifiableScrollTable class_table;
 		private ModifiableScrollTable appt_table;
 		
-		protected StudentPanel(CellValue cv) {			
+		protected StudentPanel(CellValue cv) {
+			//this.setBackground(new Background(new BackgroundFill(Paint.valueOf("Blue"), null, null)));
 			class_table = new ModifiableScrollTable();
 			appt_table = new ModifiableScrollTable();
-			
+			try {
 			ResultSet classes = c.query("SELECT class_name.ClassNumber, Section, ClassName "
 					+ "FROM class_name INNER JOIN ("
 					+ "SELECT StudentID, Section, ClassNumber "
 					+ "FROM enrolled INNER JOIN class_section "
 					+ "ON enrolled.EnrollmentCode = class_section.EnrollmentCode"
-					+ ") AS st_section"
+					+ ") AS st_section "
 					+ "ON class_name.ClassNumber = st_section.ClassNumber "
 					+ "WHERE StudentID = " + cv.getStudentID());
+			class_table.setTable(TableMaker.gimmeTable(st_class_keys, classes));
+			classes.close();
 			ResultSet visits = c.query("SELECT ClassNumber, StartDate, StartTime, Duration "
 					+ "FROM visit WHERE StudentID = " + cv.getStudentID());
-			try {
-				class_table.setTable(TableMaker.gimmeTable(st_class_keys, classes));
 				appt_table.setTable(TableMaker.gimmeTable(st_visit_keys, visits));
-				classes.close();
 				visits.close();
 			} catch (SQLException e) {
 				new ErrorHandle("Could not create tables for student: " + e.getSQLState());
+			} catch (NullPointerException e1) {
+				new ErrorHandle("Null pointer: " + e1.getCause());
+				e1.printStackTrace();
 			}
 			
 			Label id = new Label(cv.getStudentID());
 			GridPane.setConstraints(id, 0, 0, 1, 1);
 			Label st = new Label(cv.getStudentStatus());
-			GridPane.setConstraints(st, 3, 0, 1, 1);
+			GridPane.setConstraints(st, 4, 0, 1, 1);
 			Label lname = new Label(cv.getLastName());
 			GridPane.setConstraints(lname, 0, 1, 1, 1);
 			Label fname = new Label(cv.getFirstName());
@@ -215,10 +232,15 @@ public class TabSearch extends Tab {
 			Label vs = new Label("Scheduled Appointments");
 			GridPane.setConstraints(vs, 0, 8, 1, 1);
 			
-			this.getChildren().addAll(id,st,lname,fname,cl,vs);
+			Button ret = new Button("Return");
+			ret.setOnAction((event)->{
+				pop();
+			});
+			GridPane.setConstraints(ret, 4, 2, 1, 1);
+			this.getChildren().addAll(id,st,lname,fname,cl,vs,ret);
 
-			GridPane.setConstraints(class_table, 0, 3, 4, 5);
-			GridPane.setConstraints(appt_table, 0, 9, 4, 5);
+			GridPane.setConstraints(class_table, 0, 3, 5, 5);
+			GridPane.setConstraints(appt_table, 0, 9, 5, 5);
 			this.getChildren().addAll(class_table, appt_table);
 		}
 	}
