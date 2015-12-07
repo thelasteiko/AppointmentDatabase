@@ -14,11 +14,11 @@ import com.eiko.gui.main.MainFrame;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -121,11 +121,15 @@ public class TabSearch extends Tab {
 			CellValue cv = sc_pane.getItem();
 			switch(currentsearch) {
 			case "Student":
-				push(new StudentPanel(cv));
+				push(new ScrollPane(new StudentPanel(cv)));
+				break;
+			case "Class":
+				push(new ScrollPane(new ClassPanel(cv)));
 				break;
 			}
 			} catch (NoSuchElementException e) {
 				//if item isn't selected or the table isn't available
+				//do nothing
 			}
 		});
 		GridPane.setConstraints(open, 4, 4, 1, 1);
@@ -148,12 +152,16 @@ public class TabSearch extends Tab {
 			keys = student_keys;
 			if(MainFrame.isNumeric(text)) {
 				queryname =  "select_student_byid";
+				System.out.println(queryname);
 			} else queryname = "select_student_byname";
+			break;
 		case "Class":
+			//System.out.println(currentsearch);
 			keys = class_keys;
 			if(MainFrame.isNumeric(text)) {
 				queryname = "select_class_byid";
 			} else queryname = "select_class_byname";
+			break;
 		case "Appointment":
 			keys = visit_keys;
 			if(MainFrame.isNumeric(text)) {
@@ -161,17 +169,17 @@ public class TabSearch extends Tab {
 			} else if (text.contains("/")) {
 				queryname = "select_visit_bydate";
 			}
+			break;
 		default:
-			keys = student_keys;
-			queryname = "select_student_byname";
+			return;
 		}
 		ResultSet r = c.query(queryname, text);
 		sc_pane.setTable(TableMaker.gimmeTable(keys, r));
 		r.close();
 	}
 	
-	public void push(GridPane gp) {
-		this.stack.getChildren().add(0,gp);
+	public void push(ScrollPane scrollPane) {
+		this.stack.getChildren().add(0,scrollPane);
 		stack.getChildren().get(1).setVisible(false);
 	}
 	
@@ -230,6 +238,64 @@ public class TabSearch extends Tab {
 			Label cl = new Label("Enrolled Classes");
 			GridPane.setConstraints(cl, 0, 2, 1, 1);
 			Label vs = new Label("Scheduled Appointments");
+			GridPane.setConstraints(vs, 0, 6, 1, 1);
+			
+			Button ret = new Button("Return");
+			ret.setOnAction((event)->{
+				pop();
+			});
+			GridPane.setConstraints(ret, 4, 2, 1, 1);
+			
+			Button add_visit = new Button("Schedule Appt");
+			add_visit.setOnAction((event)->{
+				
+			});
+			this.getChildren().addAll(id,st,lname,fname,cl,vs,ret);
+
+			GridPane.setConstraints(class_table, 0, 3, 5, 3);
+			GridPane.setConstraints(appt_table, 0, 7, 5, 3);
+			this.getChildren().addAll(class_table, appt_table);
+		}
+	}
+	
+	private class ClassPanel extends GridPane {
+		
+		final private String[] section_keys = {"Section", "EnrollmentCode"};
+		final private String[] enr_keys = {"StudentID", "FirstName", "LastName"};
+		
+		private ModifiableScrollTable sections;
+		private ModifiableScrollTable enrollment;
+		
+		public ClassPanel(CellValue cv) {
+			//this.setBackground(new Background(new BackgroundFill(Paint.valueOf("Blue"), null, null)));
+			sections = new ModifiableScrollTable();
+			enrollment = new ModifiableScrollTable();
+			try {
+			ResultSet sect = c.query("SELECT Section, EnrollmentCode "
+					+ "FROM class_section "
+					+ "WHERE ClassNumber = " + cv.getClassNumber());
+			sections.setTable(TableMaker.gimmeTable(section_keys, sect));
+			sect.close();
+			ResultSet enr = c.query("SELECT StudentID, FirstName, LastName "
+					+ "FROM enr_student WHERE ClassNumber = " + cv.getClassNumber());
+				enrollment.setTable(TableMaker.gimmeTable(enr_keys, enr));
+				enr.close();
+			} catch (SQLException e) {
+				new ErrorHandle("Could not create tables for student: " + e.getSQLState());
+			} catch (NullPointerException e1) {
+				new ErrorHandle("Null pointer: " + e1.getCause());
+				e1.printStackTrace();
+			}
+			
+			Label id = new Label(cv.getClassNumber());
+			GridPane.setConstraints(id, 0, 0, 1, 1);
+			Label st = new Label("# out of total");	//could have number of students enrolled and how many seats are left
+			GridPane.setConstraints(st, 4, 0, 1, 1);
+			Label lname = new Label(cv.getClassName());
+			GridPane.setConstraints(lname, 0, 1, 1, 1);
+			Label cl = new Label("Sections");
+			GridPane.setConstraints(cl, 0, 2, 1, 1);
+			Label vs = new Label("Currently Enrolled");
 			GridPane.setConstraints(vs, 0, 8, 1, 1);
 			
 			Button ret = new Button("Return");
@@ -237,11 +303,11 @@ public class TabSearch extends Tab {
 				pop();
 			});
 			GridPane.setConstraints(ret, 4, 2, 1, 1);
-			this.getChildren().addAll(id,st,lname,fname,cl,vs,ret);
+			this.getChildren().addAll(id,st,lname,cl,vs,ret);
 
-			GridPane.setConstraints(class_table, 0, 3, 5, 5);
-			GridPane.setConstraints(appt_table, 0, 9, 5, 5);
-			this.getChildren().addAll(class_table, appt_table);
+			GridPane.setConstraints(sections, 0, 3, 5, 5);
+			GridPane.setConstraints(enrollment, 0, 9, 5, 5);
+			this.getChildren().addAll(sections, enrollment);
 		}
 	}
 	

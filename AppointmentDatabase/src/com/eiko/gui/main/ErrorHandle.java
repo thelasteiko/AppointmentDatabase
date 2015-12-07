@@ -12,14 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
- * @author Mindy
- *
+ * @author Melinda Robertson
+ * @version 20151207
  */
 public class ErrorHandle extends JFrame {
-	
-//	public static void main(String[] args) {
-//		new ErrorHandle("TEST");
-//	}
 
 	/**
 	 * 
@@ -30,7 +26,7 @@ public class ErrorHandle extends JFrame {
 	 * @throws HeadlessException
 	 */
 	public ErrorHandle(String error) throws HeadlessException {
-		this.setSize(250, 100);
+		this.setBounds(250, 250, 500, 250);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Error");
 		

@@ -34,7 +34,7 @@ public class MainFrame extends Application {
 	
 	public static boolean isNumeric(String s) {
 		for(char c: s.toCharArray()) {
-			if (!Character.isDefined(c)) return false;
+			if (!Character.isDigit(c)) return false;
 		}
 		return true;
 	}
