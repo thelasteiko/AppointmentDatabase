@@ -66,8 +66,6 @@ public class TableMaker {
 	 */
 	public static ObservableList<CellValue> buildList(String[] keys, ResultSet r) throws SQLException {
 		ObservableList<CellValue> array = FXCollections.observableArrayList();
-		int maxCol = 0;
-		int maxSize = 0;
 		if (r == null) {
 			System.out.println("No result.");
 			return array;
@@ -78,11 +76,6 @@ public class TableMaker {
 			for(int i = 0; i < keys.length; i++) {
 				String s = r.getString(i+1);
 				cv.set(keys[i], s);
-				if (s.length() > maxSize) {
-					maxSize = s.length();
-					maxCol = i;
-				}
-				
 			}
 			array.add(cv);
 		}

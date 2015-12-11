@@ -145,9 +145,9 @@ public class Connector {
 	public void update(String query, String... param) {
 		try {
 			String q = resolve(query, param);
-			if (q.toLowerCase().contains("update") ||
+			if (!(q.toLowerCase().contains("update") ||
 					q.toLowerCase().contains("delete") ||
-					q.toLowerCase().contains("insert"))
+					q.toLowerCase().contains("insert")))
 				throw new IllegalArgumentException();
 			Statement s = c.createStatement();
 			s.executeUpdate(q);

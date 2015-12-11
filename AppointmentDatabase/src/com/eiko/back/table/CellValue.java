@@ -1,5 +1,6 @@
 package com.eiko.back.table;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -33,16 +34,38 @@ public class CellValue {
 		attr.put(key, new SimpleStringProperty(value.toString()));
 	}
 	
-	public String getStudentID() {return attr.get("StudentID").get();}
-	public String getFirstName() {return attr.get("FirstName").get();}
-	public String getLastName() {return attr.get("LastName").get();}
-	public String getStudentStatus() {return attr.get("StudentStatus").get();}
-	public String getClassNumber() {return attr.get("ClassNumber").get();}
-	public String getClassName() {return attr.get("ClassName").get();}
-	public String getEnrollmentCode() {return attr.get("EnrollmentCode").get();}
-	public String getSection() {return attr.get("Section").get();}
-	public String getStartDate() {return attr.get("StartDate").get();}
-	public String getStartTime() {return attr.get("StartTime").get();}
-	public String getDuration() {return attr.get("Duration").get();}
+	public int size() {
+		return attr.size();
+	}
+	
+	public String getStudentID() {return get(attr.get("StudentID"));}
+	public String getFirstName() {return get(attr.get("FirstName"));}
+	public String getLastName() {return get(attr.get("LastName"));}
+	public String getStudentStatus() {return get(attr.get("StudentStatus"));}
+	public String getClassNumber() {return get(attr.get("ClassNumber"));}
+	public String getClassName() {return get(attr.get("ClassName"));}
+	public String getEnrollmentCode() {return get(attr.get("EnrollmentCode"));}
+	public String getSection() {return get(attr.get("Section"));}
+	public String getStartDate() {return get(attr.get("StartDate"));}
+	public String getStartTime() {return get(attr.get("StartTime"));}
+	public String getDuration() {return get(attr.get("Duration"));}
+	
+	public LocalDate getAsDate() {
+		return LocalDate.parse(getStartDate());
+	}
+	
+	private String get(SimpleStringProperty s) {
+		if (s != null) return s.get();
+		else return null;
+	}
+	
+	public String toString() {
+		String ret = "{";
+		for(String s: attr.keySet()) {
+			ret += s + ":" + attr.get(s).get() +",";
+		}
+		ret += "}";
+		return ret;
+	}
 
 }

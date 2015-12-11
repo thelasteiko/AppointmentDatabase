@@ -2,6 +2,7 @@ package com.eiko.back.table;
 
 import java.util.NoSuchElementException;
 
+import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
 
@@ -28,6 +29,10 @@ public class ModifiableScrollTable extends ScrollPane {
 		if (table == null || table.getSelectionModel().getSelectedIndex() < 0)
 			throw new NoSuchElementException();
 		return table.getSelectionModel().getSelectedItem();
+	}
+	
+	public ObservableValue<? extends Boolean> isNull() {
+		return table.getSelectionModel().selectedItemProperty().isNull();
 	}
 	
 	public void setTable(TableView<CellValue> content) {
