@@ -3,15 +3,25 @@ package com.eiko.back.connect;
 /**
  * This merely adds some convenience to Connector. Inserts
  * default values for the driver, database and user. Also initializes
- * a few stored procedures directly related to this database.
+ * a few queries and stores them for later use.
  * @author Melinda Robertson
- * @version 20151201
+ * @version 20151211
  */
 public class TutorDBConnector extends Connector {
 	
+	/**
+	 * The driver for this database.
+	 */
 	public final static String DB_DRIVER = "com.mysql.jdbc.Driver";
+	/**
+	 * The name of the database and where it is located.
+	 */
 	public final static String DB_NAME = "jdbc:mysql://localhost/tutor_db";
 
+	/**
+	 * Creates the connector by initializing queries that will be used in
+	 * the program.
+	 */
 	public TutorDBConnector() {
 		super(DB_DRIVER, DB_NAME, "root", "");
 		//calling stored procedures
@@ -56,8 +66,5 @@ public class TutorDBConnector extends Connector {
 		add("select_vt_classes", "SELECT ClassNumber FROM enr_student "
 				+ "WHERE StudentID = ?");
 		add("insert_visit", "INSERT INTO visit VALUES (?,?,\"?\",?,?)");
-//		add("class_select_sections", "SELECT"
-//				+ "class_name.ClassNumber, class_name.ClassName,"
-//				+ "class_section.Clas FROM class_name INNER JOIN class_section WHERE ");
 	}
 }

@@ -2,7 +2,6 @@ package com.eiko.back.connect;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,7 +16,9 @@ import com.eiko.gui.main.ErrorHandle;
  * @version 20151203
  */
 public class Connector {
-	
+	/**
+	 * The connection holds power over the database.
+	 */
 	protected Connection c;
 	/**
 	 * Holds stored queries as Strings with labels.
@@ -40,9 +41,9 @@ public class Connector {
 			Class.forName(driver);
 			c = DriverManager.getConnection(host,username,password);
 		} catch (ClassNotFoundException e) {
-			System.out.println("Could not connect: Class not found.");
+			new ErrorHandle("Could not connect: Class not found.");
 		} catch (SQLException e1) {
-			System.out.println("Could not connect: " + e1.getSQLState());
+			new ErrorHandle("Could not connect: " + e1.getSQLState());
 		}
 	}
 	
@@ -66,7 +67,6 @@ public class Connector {
 	/**
 	 * Inserts parameters into the indicated query wherever there is
 	 * a '?' character.
-	 * TODO need to change how the last part is added
 	 * @param query is the name of the query.
 	 * @param param are the parameters to give the query.
 	 * @return a String representing a complete executable query.
@@ -87,8 +87,6 @@ public class Connector {
 		}
 		if (last < q1.length() - 1)
 			q += q1.substring(last + 1);
-		// System.out.println("qindex: " + qindex + "\tlast: " + last +
-		// "\tlength: " + q1.length());
 		return q;
 	}
 	
@@ -157,25 +155,15 @@ public class Connector {
 			new ErrorHandle("Illegal Argument for query: " + query);
 		}
 	}
-	
-	public ResultSet queryAsStmt(String query, String param) {
-		try {
-			PreparedStatement s = c.prepareStatement(query);
-			s.setString(1, param);
-			return s.executeQuery();
-		} catch (SQLException e) {
-			new ErrorHandle("SQL error with running query: " + e.getSQLState());
-		} catch (IllegalArgumentException e1) {
-			new ErrorHandle("Illegal Argument for query: " + query);
-		}
-		return null;
-	}
-	
+	/**
+	 * Executes an update. Must be one of UPDATE, INSERT, or DELETE.
+	 * @param query is the update query to execute.
+	 */
 	public void update(String query) {
 		try {
-			if (query.toLowerCase().contains("update") ||
-					query.toLowerCase().contains("delete") ||
-					query.toLowerCase().contains("insert"))
+			if (!query.toLowerCase().contains("update") ||
+					!query.toLowerCase().contains("delete") ||
+					!query.toLowerCase().contains("insert"))
 				throw new IllegalArgumentException();
 			Statement s = c.createStatement();
 			s.executeUpdate(query);

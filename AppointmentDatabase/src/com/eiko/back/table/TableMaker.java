@@ -51,7 +51,7 @@ public class TableMaker {
 			TableColumn<CellValue,String> tv = new TableColumn<CellValue,String>(keys[i]);
 			tv.setCellValueFactory(new PropertyValueFactory<CellValue,String>(keys[i]));
 			table.getColumns().add(tv);
-			tv.setMinWidth(maxSize[i]*10);
+			tv.setMinWidth(maxSize[i]*8);
 		}
 		
 		return table;
@@ -71,7 +71,6 @@ public class TableMaker {
 			return array;
 		}
 		while(r.next()) {
-			//System.out.println(r.getString(1));
 			CellValue cv = new CellValue();
 			for(int i = 0; i < keys.length; i++) {
 				String s = r.getString(i+1);

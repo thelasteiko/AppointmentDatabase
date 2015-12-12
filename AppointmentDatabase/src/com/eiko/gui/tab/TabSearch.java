@@ -33,7 +33,7 @@ import javafx.scene.layout.StackPane;
  * detailed information on request.
  * 
  * @author Melinda Robertson
- * @version 20151208
+ * @version 20151210
  */
 public class TabSearch extends Tab {
 	/**
@@ -83,7 +83,6 @@ public class TabSearch extends Tab {
 		sc_pane = new ModifiableScrollTable();
 		GridPane.setMargin(sc_pane, in);
 		GridPane.setConstraints(sc_pane, 0, 5, 5, 8);
-		// constraints: col,row,colspan,rowspan
 		field_search = new TextField();
 		GridPane.setMargin(field_search, in);
 		GridPane.setConstraints(field_search, 0, 0, 1, 1);
@@ -121,6 +120,8 @@ public class TabSearch extends Tab {
 
 		// -----------------OPEN SELECTED RECORD---------------------
 		Button open = new Button("Open");
+		open.setDisable(true);
+		open.disableProperty().bind(sc_pane.isNull());
 		GridPane.setMargin(open, new Insets(0, 0, 0, 100));
 		open.setOnAction((event) -> {
 			// TODO create a new tab of the appropriate type
@@ -139,6 +140,7 @@ public class TabSearch extends Tab {
 				// if item isn't selected or the table isn't available
 				// do nothing
 			}
+			open.disableProperty().bind(sc_pane.isNull());
 		});
 		GridPane.setConstraints(open, 4, 4, 1, 1);
 		pane_search.getChildren().addAll(field_search, btn_search, rb_student, rb_class, rb_appt, open, sc_pane);
@@ -147,10 +149,7 @@ public class TabSearch extends Tab {
 
 	/**
 	 * Reads the user's input and determines what query to run.
-	 * 
-	 * @param toggle
-	 *            is the radio button that is selected.
-	 * @return a query name.
+	 * Sets the table to the output returned from the database.
 	 */
 	private void parseRequest() throws SQLException {
 		String text = field_search.getText();
@@ -211,8 +210,9 @@ public class TabSearch extends Tab {
 	/**
 	 * Creates a new panel with a student's information.
 	 * 
-	 * @param cv
-	 * @return
+	 * @param cv is the cell value that holds the information about
+	 * 				the student.
+	 * @return a GridPane that displays the student's information.
 	 */
 	private GridPane stpanel(CellValue cv) {
 		GridPane st = new GridPane();
@@ -254,13 +254,21 @@ public class TabSearch extends Tab {
 
 		final private String[] st_class_keys = { "ClassNumber", "Section", "ClassName" };
 		final private String[] st_visit_keys = { "ClassNumber", "StartDate", "StartTime", "Duration" };
-
+		/**
+		 * Table that displays the student's classes.
+		 */
 		private ModifiableScrollTable class_table;
+		/**
+		 * Table that displays the student's appointments.
+		 */
 		private ModifiableScrollTable appt_table;
 
+		/**
+		 * Constructs a panel that displays the student information, the classes
+		 * they attend and appointments they made.
+		 * @param cv is the cell value with the student's information.
+		 */
 		protected StudentPanel(CellValue cv) {
-			// this.setBackground(new Background(new
-			// BackgroundFill(Paint.valueOf("Blue"), null, null)));
 			class_table = new ModifiableScrollTable();
 			GridPane.setMargin(class_table, in);
 			appt_table = new ModifiableScrollTable();
@@ -276,7 +284,7 @@ public class TabSearch extends Tab {
 			Label vs = new Label("Scheduled Appointments");
 			GridPane.setMargin(vs, in);
 			GridPane.setConstraints(vs, 0, 6, 1, 1);
-
+			//-----------------BUTTONS-----------------------------
 			Button mod_visit = new Button("Modify");
 			Button delete_visit = new Button("Delete");
 			delete_visit.disableProperty().bind(appt_table.isNull());
@@ -321,7 +329,10 @@ public class TabSearch extends Tab {
 			this.getChildren().addAll(class_table, appt_table, 
 					delete_visit, mod_visit, add_visit);
 		}
-		
+		/**
+		 * Creates the tables to display student classes and appointments.
+		 * @param cv is the cell value with the student's information.
+		 */
 		private void makeTables(CellValue cv) {
 			try {
 				ResultSet classes = c.query("select_st_classes", cv.getStudentID());
@@ -348,8 +359,13 @@ public class TabSearch extends Tab {
 
 		final private String[] section_keys = { "Section", "EnrollmentCode" };
 		final private String[] enr_keys = { "StudentID", "FirstName", "LastName" };
-
+		/**
+		 * The table that displays sections scheduled for this class.
+		 */
 		private ModifiableScrollTable sections;
+		/**
+		 * Table that displays the students that are enrolled.
+		 */
 		private ModifiableScrollTable enrollment;
 
 		public ClassPanel(CellValue cv) {
@@ -403,11 +419,37 @@ public class TabSearch extends Tab {
 			this.getChildren().addAll(sections, enrollment);
 		}
 	}
+	
+	/**
+	 * Returns the student by the id number as a cell value
+	 * that can be used to create the student's information panel.
+	 * @param id is the student id.
+	 * @return the CellValue representation of the student.
+	 * @throws SQLException if the student can't be found.
+	 */
+	private CellValue getStudent(String id) throws SQLException {
+		CellValue cv = new CellValue();
+		ResultSet st = c.query("select_student_byid", id);
+		st.first();
+		int n = 1;
+		cv.set("StudentID", st.getString(n++));
+		cv.set("FirstName", st.getString(n++));
+		cv.set("LastName", st.getString(n++));
+		cv.set("StudentStatus", st.getString(n));
+		st.close();
+		return cv;
+	}
 
+	/**
+	 * Displays the visit data or blank spaces to input a new appointment.
+	 * @author Melinda Robertson
+	 * @version 20151210
+	 */
 	private class ApptPanel extends GridPane {
-		// combos for class, time, duration
-		// calendar for date
-
+		/**
+		 * The combo box that displays the classes the student
+		 * is enrolled in.
+		 */
 		private ComboBox<String> cb_class;
 		private ComboBox<String> cb_time;
 		private ComboBox<String> cb_duration;
@@ -480,26 +522,6 @@ public class TabSearch extends Tab {
 			GridPane.setMargin(cb_class, in);
 			if(cv.getClassNumber() != null)
 				cb_class.setValue(cv.getClassNumber());
-		}
-
-		/**
-		 * Returns the student by the id number as a cell value
-		 * that can be used to create the student's information panel.
-		 * @param id is the student id.
-		 * @return the CellValue representation of the student.
-		 * @throws SQLException if the student can't be found.
-		 */
-		private CellValue getStudent(String id) throws SQLException {
-			CellValue cv = new CellValue();
-			ResultSet st = c.query("select_student_byid", id);
-			st.first();
-			int n = 1;
-			cv.set("StudentID", st.getString(n++));
-			cv.set("FirstName", st.getString(n++));
-			cv.set("LastName", st.getString(n++));
-			cv.set("StudentStatus", st.getString(n));
-			st.close();
-			return cv;
 		}
 		
 		private void buildTimeCombo(CellValue cv) {
