@@ -51,8 +51,7 @@ public class ModifiableScrollTable extends ScrollPane {
 	 * @return true if an item is selected, false otherwise; as an ObservableValue.
 	 */
 	public ObservableValue<? extends Boolean> isNull() {
-		if (table == null) return new NoTable();
-		return table.getSelectionModel().selectedItemProperty().isNull();
+		return new ValueIsSelected();
 	}
 	/**
 	 * Sets the content of the scroll pane which must be a table.
@@ -72,11 +71,16 @@ public class ModifiableScrollTable extends ScrollPane {
 	 * @author Melinda Robertson
 	 * @version 20151211
 	 */
-	private class NoTable extends BooleanBinding {
+	private class ValueIsSelected extends BooleanBinding {
 
 		@Override
 		protected boolean computeValue() {
-			return false;
+			if (table == null) return false;
+			return table.getSelectionModel().selectedItemProperty().isNull().getValue();
+		}
+		
+		public Boolean getValue() {
+			return computeValue();
 		}
 		
 	}

@@ -61,17 +61,6 @@ public class MainFrame extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	/**
-	 * Checks to see if a string is numeric.
-	 * Located here for convenience.
-	 * @param s is the string.
-	 * @return true if every character represents a number, false otherwise.
-	 */
-	public static boolean isNumeric(String s) {
-		for(char c: s.toCharArray()) {
-			if (!Character.isDigit(c)) return false;
-		}
-		return true;
-	}
+
 
 }
