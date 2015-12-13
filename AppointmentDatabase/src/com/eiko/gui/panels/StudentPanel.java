@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.eiko.gui.panels;
 
 import java.sql.ResultSet;
@@ -23,8 +20,13 @@ import javafx.scene.layout.GridPane;
  * @version 20151213
  */
 public class StudentPanel extends AbstractGridPane {
-	
+	/**
+	 * The column names for the classes.
+	 */
 	final private String[] st_class_keys = { "ClassNumber", "Section", "ClassName" };
+	/**
+	 * The column names for the appointments.
+	 */
 	final private String[] st_visit_keys = { "ClassNumber", "StartDate", "StartTime", "Duration" };
 	
 	/**
@@ -37,7 +39,8 @@ public class StudentPanel extends AbstractGridPane {
 	private ModifiableScrollTable appt_table;
 
 	/**
-	 * @param parent
+	 * Calls build to create the panel.
+	 * @param parent is the stack tab that holds this panel.
 	 */
 	public StudentPanel(AbstractStackTab parent, CellValue cv) {
 		super(parent);
@@ -102,7 +105,7 @@ public class StudentPanel extends AbstractGridPane {
 			cv2.set("StudentID", cv.getStudentID());
 			parent.push(new ApptPanel(parent, cv2));
 		});
-
+		if(!class_table.hasItems()) add_visit.setDisable(true);
 		this.getChildren().addAll(st_panel, cl, vs);
 
 		GridPane.setConstraints(class_table, 0, 3, 5, 3);

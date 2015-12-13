@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.eiko.gui.panels;
 
 import java.sql.ResultSet;
@@ -35,7 +32,8 @@ public class ApptPanel extends AbstractGridPane {
 	private DatePicker dp;
 
 	/**
-	 * @param parent
+	 * @see {@link AbstractGridPane.AbstractGridPane(AbstractStackTab)}
+	 * @param cv
 	 */
 	public ApptPanel(AbstractStackTab parent, CellValue cv) {
 		super(parent);

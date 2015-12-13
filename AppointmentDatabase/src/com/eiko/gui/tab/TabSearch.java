@@ -15,7 +15,7 @@ public class TabSearch extends AbstractStackTab {
 
 	/**
 	 * Creates the search tab
-	 * @param c
+	 * @param c is the database connection.
 	 */
 	public TabSearch(TutorDBConnector c) {
 		super(c);

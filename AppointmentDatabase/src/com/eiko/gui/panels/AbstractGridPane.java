@@ -12,19 +12,35 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-
+/**
+ * An abstract class as the base for panels that go into the stack tabs.
+ * In this implementation the panels access the parent's push and pop
+ * methods to modify the stack.
+ * @author Melinda Robertson
+ * @version 20151213
+ */
 public abstract class AbstractGridPane extends GridPane {
 	
 	/**
 	 * Default insets for every component.
 	 */
 	public final static Insets in = new Insets(5, 5, 5, 5);
-	
+	/**
+	 * The parent stack tab.
+	 */
 	protected AbstractStackTab parent;
 
+	/**
+	 * Constructs the panel.
+	 * @param parent is the stack tab that holds this panel.
+	 */
 	public AbstractGridPane(AbstractStackTab parent) {
 		this.parent = parent;
 	}
+	/**
+	 * Builds the panel.
+	 * @param cv holds the information to display in the panel.
+	 */
 	abstract protected void build(CellValue cv);
 	/**
 	 * Creates a new panel with a student's information.

@@ -1,8 +1,5 @@
 package com.eiko.gui.tab;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import com.eiko.back.connect.TutorDBConnector;
 
 import javafx.scene.control.TabPane;
@@ -13,10 +10,8 @@ import javafx.scene.control.TabPane;
  * @author Melinda Robertson
  * @version 20151211
  */
-public class TabHolder extends TabPane implements PropertyChangeListener{
-	
-	public static final String POP = "pop";
-	public static final String PUSH = "push";
+public class TabHolder extends TabPane{
+
 	/**
 	 * Displays a search box and panels with the results
 	 * of the search.
@@ -40,16 +35,5 @@ public class TabHolder extends TabPane implements PropertyChangeListener{
 		this.getTabs().add(tab1);
 		//this.getTabs().add(tab2);
 	}
-
-	/**
-	 * Will eventually be used to process push and pop functions for the tabs
-	 * which will be essentially stacks of GridPanes. 
-	 */
-	@Override
-	public void propertyChange(PropertyChangeEvent e) {
-		//TODO
-	}
 	
-	
-
 }

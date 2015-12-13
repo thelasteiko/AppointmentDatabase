@@ -12,7 +12,11 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-
+/**
+ * Tester class to try out the backend arguments.
+ * @author Melinda Robertson
+ * @version 20151213
+ */
 public class Tester extends Application {
 
 	@Override
@@ -37,7 +41,9 @@ public class Tester extends Application {
 	public static void main(String[] args) {
 		launch(args);
 	}
-	
+	/**
+	 * Testing the parsing method.
+	 */
 	public void test2() {
 		String sql = "SELECT * FROM class_name WHERE "
 				+ "LCASE(ClassName) LIKE LCASE(CONCAT('%','?','%'))";
@@ -50,13 +56,11 @@ public class Tester extends Application {
 	/**
 	 * Inserts parameters into the indicated query wherever there is
 	 * a '?' character.
-	 * TODO need to change how the last part is added
 	 * @param query is the name of the query.
 	 * @param param are the parameters to give the query.
 	 * @return a String representing a complete executable query.
 	 */
 	public String resolve(String q1, String... param) {
-		//String q1 = store.get(query);
 		String q = "";
 		int qindex = q1.indexOf('?');
 		int last = -1;
@@ -72,7 +76,9 @@ public class Tester extends Application {
 		//System.out.println("qindex: " + qindex + "\tlast: " + last + "\tlength: " + q1.length());
 		return q;
 	}
-	
+	/**
+	 * Testing the parameterized queries.
+	 */
 	public static void test1() {
 		TutorDBConnector c = new TutorDBConnector();
 		String query = "select_any";
