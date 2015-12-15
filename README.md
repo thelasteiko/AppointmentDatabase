@@ -14,7 +14,7 @@ To run the program:
 1. The user must have a MySQL server and be able to run the SQL script packaged with the program.
 2. Start the MySQL server.
 3. Run ApptDBSetup.sql to create the required database with sample data.
-4. Double click the ApptDBV1.jar file to run the program.
+4. Double click the ApptDBV2.jar file to run the program.
 
 ##Usage
 
