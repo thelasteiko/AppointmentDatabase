@@ -26,7 +26,6 @@ public class TabHolder extends TabPane{
 	/**
 	 * Constructs a tab pane that initializes two tabs.
 	 * The second tab is currently not in use.
-	 * @param c is the connector for the database.
 	 */
 	public TabHolder() {
 		this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);

@@ -11,7 +11,6 @@ import com.eiko.back.connect.Connector;
 public class TabUsage extends AbstractStackTab {
 	/**
 	 * Constructs the tab.
-	 * @param c is the connection to the database.
 	 */
 	public TabUsage() {
 		super();

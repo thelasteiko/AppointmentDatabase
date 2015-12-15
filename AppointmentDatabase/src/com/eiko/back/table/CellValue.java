@@ -37,6 +37,7 @@ public class CellValue {
 	 * Sets the property and its associated value as a Number.
 	 * @param key is the key or property name.
 	 * @param value is the value associated with the property.
+	 * @param <T> is any number.
 	 */
 	public <T extends Number> void set(String key, T value) {
 		attr.put(key, new SimpleStringProperty(String.valueOf(value)));

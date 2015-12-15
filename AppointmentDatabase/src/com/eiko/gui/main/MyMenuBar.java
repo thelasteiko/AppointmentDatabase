@@ -32,6 +32,7 @@ public class MyMenuBar extends MenuBar {
 
 	/**
 	 * Creates the menu bar with file and account options.
+	 * @param parent is the owner of this menu bar.
 	 */
 	public MyMenuBar(MainFrame parent) {
 		this.parent = parent;

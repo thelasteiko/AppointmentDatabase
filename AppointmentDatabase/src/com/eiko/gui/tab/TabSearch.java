@@ -14,8 +14,7 @@ import com.eiko.gui.panels.SearchPanel;
 public class TabSearch extends AbstractStackTab {
 
 	/**
-	 * Creates the search tab
-	 * @param c is the database connection.
+	 * Creates the search tab.
 	 */
 	public TabSearch() {
 		super();
