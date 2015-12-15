@@ -1,12 +1,12 @@
 package com.eiko.gui.main;
 
-import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.back.connect.Connector;
 import com.eiko.gui.tab.TabHolder;
 
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
@@ -38,20 +38,35 @@ public class MainFrame extends Application {
 	 * Sets the vertical position of this frame in the screen.
 	 */
 	public static final double y = ((screensize.getHeight()-HEIGHT) / 2);
+	
+	/**
+	 * The content of the frame.
+	 */
+	private TabHolder tabs;
+	
 	/**
 	 * Creates and displays the application.
 	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		stage.setTitle("Tutoring Appointment Manager");
-		Group group = new Group();
+		VBox group = new VBox();
 		Scene scene = new Scene(group);
+		MyMenuBar menu = new MyMenuBar(this);
 		//This should hold the bulk of the program.
-		TabHolder tabs = new TabHolder(new TutorDBConnector());
+		tabs = new TabHolder();
 		tabs.setMinSize(WIDTH,HEIGHT);
-		group.getChildren().add(tabs);
+		group.getChildren().addAll(menu,tabs);
 		stage.setScene(scene);
 		stage.show();
+	}
+	
+	/**
+	 * Sets the connection to the database for dependent objects.
+	 * @param c is the database connection.
+	 */
+	public void setConnector(Connector c) {
+		tabs.setConnector(c);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 package com.eiko.gui.tab;
 
-import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.back.connect.Connector;
 import com.eiko.gui.main.MainFrame;
 import com.eiko.gui.panels.SearchPanel;
 
@@ -17,10 +17,19 @@ public class TabSearch extends AbstractStackTab {
 	 * Creates the search tab
 	 * @param c is the database connection.
 	 */
-	public TabSearch(TutorDBConnector c) {
-		super(c);
+	public TabSearch() {
+		super();
 		this.setText("Search");
 		setSize(MainFrame.WIDTH, MainFrame.HEIGHT);
+	}
+	
+	/**
+	 * Creates the connection to the database and initializes
+	 * the search panel.
+	 */
+	@Override
+	public void setConnector(Connector c) {
+		this.c = c;
 		push(new SearchPanel(this));
 	}
 }
