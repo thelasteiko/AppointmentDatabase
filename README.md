@@ -42,6 +42,7 @@ Displays database information in tables:
 The main program and error window:
 - ErrorHandle
 - MainFrame
+- MyMenuBar
 
 Panels that display detailed information:
 - AbstractGridPane
