@@ -120,9 +120,15 @@ public class SearchPanel extends AbstractGridPane {
 			switch (currentsearch) {
 			case "Student":
 				parent.push(new StudentPanel(parent, cv2));
+				sc_pane.setTable(null);
 				break;
 			case "Class":
 				parent.push(new ClassPanel(parent, cv2));
+				sc_pane.setTable(null);
+				break;
+			case "Appointment":
+				parent.push(new ApptPanel(parent, cv2));
+				sc_pane.setTable(null);
 				break;
 			}
 		});
@@ -160,13 +166,14 @@ public class SearchPanel extends AbstractGridPane {
 			keys = visit_keys;
 			if (isNumeric(text)) {
 				queryname = "select_visit_byid";
-			} else if (text.contains("/")) {
+			} else if (text.contains("/") || text.contains("-")) {
 				queryname = "select_visit_bydate";
 			}
 			break;
 		default:
 			return;
 		}
+		if (queryname.isEmpty()) return;
 		ResultSet r = parent.c().query(queryname, text);
 		sc_pane.setTable(TableMaker.gimmeTable(keys, r));
 		r.close();

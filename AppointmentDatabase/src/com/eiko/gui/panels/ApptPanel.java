@@ -82,8 +82,7 @@ public class ApptPanel extends AbstractGridPane {
 							cv.getStartDate(), cv.getStartTime() });
 					parent.c().update("insert_visit", param);
 				}
-				parent.pop();
-				parent.pop();
+				parent.top();
 			});
 			GridPane.setConstraints(save, 2, 6);
 			GridPane.setMargin(save, in);

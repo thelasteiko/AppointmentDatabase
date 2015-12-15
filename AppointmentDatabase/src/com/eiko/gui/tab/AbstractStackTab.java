@@ -62,6 +62,15 @@ public abstract class AbstractStackTab extends Tab {
 		if (stack.getChildren().size() < 1)	return;
 		stack.getChildren().get(0).setVisible(true);
 	}
+	
+	/**
+	 * Pop panels off the stack until there is only one left.
+	 */
+	public void top() {
+		while(stack.getChildren().size() > 1) {
+			pop();
+		}
+	}
 	/**
 	 * Accesses the database connection.
 	 * @return the connector for the database.

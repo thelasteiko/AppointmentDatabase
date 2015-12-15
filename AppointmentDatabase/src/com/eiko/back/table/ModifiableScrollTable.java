@@ -71,6 +71,7 @@ public class ModifiableScrollTable extends ScrollPane {
 	public void setTable(TableView<CellValue> content) {
 		this.table = content;
 		this.setContent(content);
+		if (table == null) return;
 		int l = (table.getItems().size() + 1) * 40;
 		this.setMinHeight(l);
 		this.setMaxHeight(l);
