@@ -1,6 +1,7 @@
 package com.eiko.gui.tab;
 
-import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.back.connect.Connector;
+
 /**
  * Will be used to display usage statistics such as in a chart
  * or graph.
@@ -10,11 +11,19 @@ import com.eiko.back.connect.TutorDBConnector;
 public class TabUsage extends AbstractStackTab {
 	/**
 	 * Constructs the tab.
-	 * @param c is the connection to the database.
 	 */
-	public TabUsage(TutorDBConnector c) {
-		super(c);
+	public TabUsage() {
+		super();
 		this.setText("Usage");
+	}
+
+	/**
+	 * This does nothing right now.
+	 */
+	@Override
+	public void setConnector(Connector c) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

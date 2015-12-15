@@ -86,6 +86,8 @@ public class TableMaker {
 	 * auto size the columns to the data.
 	 * @param columns are the column names.
 	 * @param data is the data to be inserted into the table.
+	 * @param <S> is the data type for the table contents.
+	 * @param <T> is the data type for information in S.
 	 * @return a table view.
 	 */
 	public static <S, T> TableView<S> buildTable(String[] columns, ObservableList<S> data) {

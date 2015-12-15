@@ -24,7 +24,15 @@ public class TutorDBConnector extends Connector {
 	 */
 	public TutorDBConnector() {
 		super(DB_DRIVER, DB_NAME, "root", "");
-		
+		init();
+	}
+	
+	public TutorDBConnector(String driver, String host, String username, String password) {
+		super(driver, host, username, password);
+		init();
+	}
+	
+	private void init() {
 		//----------------SEARCH TAB--------------------------------------
 		add("select_student_byid", "SELECT * FROM student WHERE StudentID = ?");
 		add("select_student_byname", "SELECT * FROM student WHERE "

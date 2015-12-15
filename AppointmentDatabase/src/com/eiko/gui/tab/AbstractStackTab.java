@@ -25,13 +25,18 @@ public abstract class AbstractStackTab extends Tab {
 	/**
 	 * The constructor. Makes an instance of TabSearch with a database
 	 * connector that accesses a tutoring database.
-	 * @param c is the database connector.
 	 */
-	public AbstractStackTab(Connector c) {
-		this.c = c;
+	public AbstractStackTab() {
 		stack = new StackPane();
 		this.setContent(stack);
 	}
+	
+	/**
+	 * Sets the connection to the database.
+	 * @param c is the connector.
+	 */
+	abstract public void setConnector(Connector c);
+	
 	/**
 	 * Sets the size of the tab in pixels.
 	 * @param width is the width.

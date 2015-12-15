@@ -1,6 +1,6 @@
 package com.eiko.gui.tab;
 
-import com.eiko.back.connect.TutorDBConnector;
+import com.eiko.back.connect.Connector;
 
 import javafx.scene.control.TabPane;
 
@@ -26,14 +26,20 @@ public class TabHolder extends TabPane{
 	/**
 	 * Constructs a tab pane that initializes two tabs.
 	 * The second tab is currently not in use.
-	 * @param c is the connector for the database.
 	 */
-	public TabHolder(TutorDBConnector c) {
+	public TabHolder() {
 		this.setTabClosingPolicy(TabClosingPolicy.UNAVAILABLE);
-		tab1 = new TabSearch(c);
+		tab1 = new TabSearch();
 		//tab2 = new TabUsage(c);
 		this.getTabs().add(tab1);
 		//this.getTabs().add(tab2);
 	}
 	
+	/**
+	 * Sets the connection to the database for dependent objects.
+	 * @param c is the database connector.
+	 */
+	public void setConnector(Connector c) {
+		tab1.setConnector(c);
+	}
 }
