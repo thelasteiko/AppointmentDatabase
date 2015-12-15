@@ -2,7 +2,6 @@ package com.eiko.back.table;
 
 import java.util.NoSuchElementException;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableView;
@@ -40,10 +39,20 @@ public class ModifiableScrollTable extends ScrollPane {
 	 * @throws NoSuchElementException if there is no table or the selected
 	 * index is less than zero.
 	 */
-	public CellValue getItem() throws NoSuchElementException {
+	public CellValue getItem() {
 		if (table == null || table.getSelectionModel().getSelectedIndex() < 0)
-			throw new NoSuchElementException();
+			return null;
 		return table.getSelectionModel().getSelectedItem();
+	}
+	/**
+	 * Determines if there is a table and if it has items.
+	 * @return true if the table exists and there is at least one item as content,
+	 * 			false otherwise.
+	 */
+	public boolean hasItems() {
+		if (table == null) return false;
+		if (table.getItems().size() == 0) return false;
+		return true;
 	}
 	/**
 	 * Returns the value of the table's selection model item property.
@@ -51,7 +60,7 @@ public class ModifiableScrollTable extends ScrollPane {
 	 * @return true if an item is selected, false otherwise; as an ObservableValue.
 	 */
 	public ObservableValue<? extends Boolean> isNull() {
-		if (table == null) return new NoTable();
+		if (table == null) return null;
 		return table.getSelectionModel().selectedItemProperty().isNull();
 	}
 	/**
@@ -62,23 +71,11 @@ public class ModifiableScrollTable extends ScrollPane {
 	public void setTable(TableView<CellValue> content) {
 		this.table = content;
 		this.setContent(content);
+		if (table == null) return;
 		int l = (table.getItems().size() + 1) * 40;
 		this.setMinHeight(l);
 		this.setMaxHeight(l);
 		this.setPrefHeight(l);
-	}
-	/**
-	 * Send this if there is no table.
-	 * @author Melinda Robertson
-	 * @version 20151211
-	 */
-	private class NoTable extends BooleanBinding {
-
-		@Override
-		protected boolean computeValue() {
-			return false;
-		}
-		
 	}
 
 }

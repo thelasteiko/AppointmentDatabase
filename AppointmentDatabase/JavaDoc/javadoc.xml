@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="public" author="true" classpath="mysql-connector-java-5.1.31-bin.jar" destdir="" doctitle="TDBdoc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.eiko.gui.tab,com.eiko.back.connect,com.eiko.back.table,com.eiko.gui.panels,com.eiko.gui.main" source="1.8" sourcepath="src" splitindex="true" use="true" version="true"/>
+    </target>
+</project>
