@@ -116,7 +116,7 @@ public class Connector {
 	/**
 	 * Executes a SELECT query.
 	 * @param query is the query to execute.
-	 * @return
+	 * @return the result of the query.
 	 */
 	public ResultSet query(String query) {
 		try {

@@ -36,8 +36,9 @@ public class ClassPanel extends AbstractGridPane {
 	private ModifiableScrollTable enrollment;
 
 	/**
-	 * @param parent
-	 * @param cv
+	 * Creates a panel that displays information about a class.
+	 * @param parent is the stack tab that holds this panel.
+	 * @param cv holds the information about the class.
 	 */
 	public ClassPanel(AbstractStackTab parent, CellValue cv) {
 		super(parent);

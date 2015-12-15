@@ -32,8 +32,10 @@ public class ApptPanel extends AbstractGridPane {
 	private DatePicker dp;
 
 	/**
-	 * @see {@link AbstractGridPane.AbstractGridPane(AbstractStackTab)}
-	 * @param cv
+	 * Creates a panel that displays the student and appointment information
+	 * and allows the user to make changes.
+	 * @param parent is the stack tab that holds this panel.
+	 * @param cv holds data about the appointment.
 	 */
 	public ApptPanel(AbstractStackTab parent, CellValue cv) {
 		super(parent);

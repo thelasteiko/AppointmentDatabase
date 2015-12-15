@@ -41,6 +41,7 @@ public class StudentPanel extends AbstractGridPane {
 	/**
 	 * Calls build to create the panel.
 	 * @param parent is the stack tab that holds this panel.
+	 * @param cv holds the information about the student.
 	 */
 	public StudentPanel(AbstractStackTab parent, CellValue cv) {
 		super(parent);

@@ -26,7 +26,8 @@ public class ErrorHandle extends JFrame {
 
 	/**
 	 * Creates a frame to display an error.
-	 * @throws HeadlessException
+	 * @param error is the error message to display.
+	 * @throws HeadlessException but I'm not sure why.
 	 */
 	public ErrorHandle(String error) throws HeadlessException {
 		this.setBounds(
