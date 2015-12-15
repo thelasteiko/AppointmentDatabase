@@ -24,10 +24,6 @@ public class TutorDBConnector extends Connector {
 	 */
 	public TutorDBConnector() {
 		super(DB_DRIVER, DB_NAME, "root", "");
-		//calling stored procedures
-		add("call_apptbyid", "CALL tutor_db.getApptbyID(?)");
-		add("call_apptbyname", "CALL tutor_db.getApptbyName(?)");
-		add("select_any", "SELECT * FROM ? WHERE ? = ?");
 		
 		//----------------SEARCH TAB--------------------------------------
 		add("select_student_byid", "SELECT * FROM student WHERE StudentID = ?");

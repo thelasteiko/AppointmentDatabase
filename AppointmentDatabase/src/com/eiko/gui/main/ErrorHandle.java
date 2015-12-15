@@ -31,7 +31,7 @@ public class ErrorHandle extends JFrame {
 	public ErrorHandle(String error) throws HeadlessException {
 		this.setBounds(
 				(int)MainFrame.x,(int)MainFrame.y,
-				(int)MainFrame.WIDTH,(int)MainFrame.HEIGHT);
+				(int)MainFrame.WIDTH,(int)MainFrame.HEIGHT/2);
 		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 		this.setTitle("Error");
 		

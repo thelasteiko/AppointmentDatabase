@@ -75,9 +75,9 @@ public class ApptPanel extends AbstractGridPane {
 			save.setOnAction((event) -> {
 				String[] param = new String[] { cv.getStudentID(), cb_class.getValue(), dp.getValue().toString(),
 						cb_time.getValue(), cb_duration.getValue() };
-				if (cv.getClassNumber() == null) {
+				if (cv.getClassNumber() == null) {	//if new appt
 					parent.c().update("insert_visit", param);
-				} else {
+				} else {	//if modifying old appt
 					parent.c().update("delete_visit", new String[] { cv.getStudentID(), cv.getClassNumber(),
 							cv.getStartDate(), cv.getStartTime() });
 					parent.c().update("insert_visit", param);
